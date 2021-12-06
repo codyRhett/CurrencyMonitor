@@ -12,6 +12,18 @@ public class DbHandler {
         connection = DriverManager.getConnection(CURRTABLE);
     }
 
+    public void createTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS test (\n"
+                + "	Currency integer,\n"
+                + "	Rate real\n"
+                + ");";
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void addCurrency(String currency, float rate) {
         try (PreparedStatement statement = connection.prepareStatement(
                 "INSERT INTO test(`Currency`, `Rate`) " +

@@ -60,9 +60,10 @@ public class main {
 
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         URL url = new URL("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
-        httpServerInit(8000);
+        //httpServerInit(8000);
         DbHandler dbHandler = new DbHandler();
         DbHandler.connect();
+        dbHandler.createTable();
         Thread runRead = new Thread(() -> {
             while(true){
                 try {
