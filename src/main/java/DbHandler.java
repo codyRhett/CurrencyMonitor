@@ -2,7 +2,7 @@ import java.sql.*;
 
 public class DbHandler {
     // Константа, в которой хранится адрес подключения
-    private static final String CON_STR = "jdbc:sqlite:/home/artem/IdeaProjects/CurrencyMonitor/test.sqlite";
+    private static final String CON_STR = "jdbc:sqlite:/home/artem/CurrencyMonitor/test.sqlite";
 
     // Объект, в котором будет храниться соединение с БД
     public static Connection connection;

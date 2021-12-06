@@ -8,7 +8,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 import com.sun.net.httpserver.*;
 import org.w3c.dom.Document;
@@ -36,7 +35,10 @@ public class main {
                         Node cubeNode = cubeChild.item(k);
                         if (cubeNode.getNodeType() != Node.TEXT_NODE) {
                             NamedNodeMap namedNodeMap = cubeNode.getAttributes();
-                            currencies.put(namedNodeMap.item(0).getNodeValue(), Float.parseFloat(namedNodeMap.item(1).getNodeValue()));
+                            String nameNode = namedNodeMap.item(0).getNodeValue();
+                            if (nameNode.equals("RUB") || nameNode.equals("JPY") || nameNode.equals("USD")) {
+                                currencies.put(namedNodeMap.item(0).getNodeValue(), Float.parseFloat(namedNodeMap.item(1).getNodeValue()));
+                            }
                         }
                     }
                 }
@@ -45,80 +47,28 @@ public class main {
         return currencies;
     }
 
-    private static HttpServer httpServer = new HttpServer() {
-        @Override
-        public void bind(InetSocketAddress inetSocketAddress, int i) throws IOException {
+    private static void httpServerInit(int port) throws IOException {
 
-        }
-
-        @Override
-        public void start() {
-
-        }
-
-        @Override
-        public void setExecutor(Executor executor) {
-
-        }
-
-        @Override
-        public Executor getExecutor() {
-            return null;
-        }
-
-        @Override
-        public void stop(int i) {
-
-        }
-
-        @Override
-        public HttpContext createContext(String s, HttpHandler httpHandler) {
-            return null;
-        }
-
-        @Override
-        public HttpContext createContext(String s) {
-            return null;
-        }
-
-        @Override
-        public void removeContext(String s) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public void removeContext(HttpContext httpContext) {
-
-        }
-
-        @Override
-        public InetSocketAddress getAddress() {
-            return null;
-        }
-    };
-
-    public static void main(String[] args) throws IOException, JAXBException, SAXException, ParserConfigurationException, SQLException, ClassNotFoundException {
-        URL url = new URL("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
-
-        int serverPort = 8000;
-        HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/data", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
-                String respText = "Hello!";
-                exchange.sendResponseHeaders(200, respText.getBytes().length);
-                OutputStream output = exchange.getResponseBody();
-                output.write(respText.getBytes());
-                output.flush();
+                // ??
             }
             exchange.close();
         }));
         server.setExecutor(null); // creates a default executor
         server.start();
+    }
+
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
+        URL url = new URL("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
+
+        httpServerInit(8000);
 
         DbHandler dbHandler = new DbHandler();
         DbHandler.connect();
 
-        Thread run = new Thread(() -> {
+        Thread runRead = new Thread(() -> {
             while(true){
                 try {
                     dbHandler.clearTable();
@@ -131,6 +81,6 @@ public class main {
                 }
             }
         });
-        run.start();
+        runRead.start();
     }
 }
