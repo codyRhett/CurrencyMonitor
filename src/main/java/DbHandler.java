@@ -10,7 +10,6 @@ public class DbHandler {
     public static void connect() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         connection = DriverManager.getConnection(CURRTABLE);
-        System.out.println("База Подключена!");
     }
 
     public void addCurrency(String currency, float rate) {
