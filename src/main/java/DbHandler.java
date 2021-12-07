@@ -1,8 +1,9 @@
 import java.sql.*;
+import org.sqlite.JDBC;
 
 public class DbHandler {
     // Константа, в которой хранится адрес подключения
-    private static final String CURRTABLE = "jdbc:sqlite:/home/artem/CurrencyMonitor/test.sqlite";
+    private static final String CURRTABLE = "jdbc:sqlite:test.sqlite";
 
     // Объект, в котором будет храниться соединение с БД
     public static Connection connection;
