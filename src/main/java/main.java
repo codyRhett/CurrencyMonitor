@@ -7,6 +7,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.sun.net.httpserver.*;
@@ -53,9 +54,9 @@ public class main {
         // Создаем сервер, куда будут приходить сообщения от клиента
         server.createContext("/api/currency", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
-                String str = exchange.getRequestURI().getQuery();
+                String queryStr = exchange.getRequestURI().getQuery();
                 try {
-                    curr.set(dbHandler.getCurrency(str));
+                    curr.set(dbHandler.getCurrency(queryStr));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -82,6 +83,7 @@ public class main {
                     currencies.clear();
                     currencies = getCurrenciesFromXml(url);
                     currencies.forEach(dbHandler::addCurrency);
+                    // delay 30 minutes
                     Thread.sleep(1800000);
                 } catch (SAXException | ParserConfigurationException | IOException | InterruptedException e) {
                     e.printStackTrace();
