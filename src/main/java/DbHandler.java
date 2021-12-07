@@ -1,14 +1,9 @@
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-
-import org.sqlite.JDBC;
 
 public class DbHandler {
     // Константа, в которой хранится адрес подключения
     private static final String CURRTABLE = "jdbc:sqlite:test.sqlite";
-    private Map<String, Float> currencies = new HashMap<>();
 
     // Объект, в котором будет храниться соединение с БД
     public static Connection connection;
