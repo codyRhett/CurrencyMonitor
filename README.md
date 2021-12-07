@@ -4,12 +4,14 @@
 
 Компиляция и запуск приложения:
 
-mvn clean install
+Запустить терминал из корневой папки:
 
-mvn dependency:copy-dependencies
+ - mvn clean install
 
-cd target/
+ - mvn dependency:copy-dependencies
 
-java -cp CurrencyMonitor-1.0-SNAPSHOT.jar:dependency main
+ - cd target/
+
+ - java -cp CurrencyMonitor-1.0-SNAPSHOT.jar:dependency main
 
 P.S. Часть программы с REST не доделана.
