@@ -13,5 +13,10 @@
  - cd target/
 
  - java -cp CurrencyMonitor-1.0-SNAPSHOT.jar:dependency main
+ 
+Для получения нужной валюты через HTTP запрос, необходимо ввести команду:
 
-P.S. Часть программы с REST не доделана.
+curl -v -X GET localhost:8001/api/currency?JPY
+
+Где вместо JPY поставить нужный атрибут - RUB, JPY, USD
+

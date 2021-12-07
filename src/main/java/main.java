@@ -7,6 +7,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.sun.net.httpserver.*;
 import org.w3c.dom.Document;
@@ -17,7 +18,7 @@ import org.xml.sax.SAXException;
 
 public class main {
     private static volatile Map<String, Float> currencies = new HashMap<>();
-
+    static DbHandler dbHandler = new DbHandler();
     private static Map<String, Float> getCurrenciesFromXml(URL url) throws ParserConfigurationException, IOException, SAXException {
         Map<String, Float> currencies = new HashMap<>();
         DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -48,9 +49,20 @@ public class main {
 
     private static void httpServerInit(int port) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-        server.createContext("/data", (exchange -> {
+        AtomicReference<Float> curr = new AtomicReference<>((float) 0);
+        // Создаем сервер, куда будут приходить сообщения от клиента
+        server.createContext("/api/currency", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
-                // ??
+                String str = exchange.getRequestURI().getQuery();
+                try {
+                    curr.set(dbHandler.getCurrency(str));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                exchange.sendResponseHeaders(200, curr.toString().getBytes().length);
+                OutputStream output = exchange.getResponseBody();
+                output.write(curr.toString().getBytes());
+                output.flush();
             }
             exchange.close();
         }));
@@ -60,10 +72,9 @@ public class main {
 
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         URL url = new URL("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
-        //httpServerInit(8000);
-        DbHandler dbHandler = new DbHandler();
         DbHandler.connect();
         dbHandler.createTable();
+        httpServerInit(8001);
         Thread runRead = new Thread(() -> {
             while(true){
                 try {

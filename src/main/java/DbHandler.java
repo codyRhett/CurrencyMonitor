@@ -1,9 +1,14 @@
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import org.sqlite.JDBC;
 
 public class DbHandler {
     // Константа, в которой хранится адрес подключения
     private static final String CURRTABLE = "jdbc:sqlite:test.sqlite";
+    private Map<String, Float> currencies = new HashMap<>();
 
     // Объект, в котором будет храниться соединение с БД
     public static Connection connection;
@@ -35,6 +40,21 @@ public class DbHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Float getCurrency(String str) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement("" +
+                "   SELECT * FROM test r\n" +
+                "ORDER BY Currency")) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String currency = rs.getString("Currency");
+                if (Objects.equals(currency, str)) {
+                    return Float.parseFloat(rs.getString("rate"));
+                }
+            }
+        }
+        return null;
     }
 
     public void clearTable() {
