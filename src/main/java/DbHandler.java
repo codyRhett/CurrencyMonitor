@@ -3,7 +3,7 @@ import java.util.Objects;
 
 public class DbHandler {
     // Константа, в которой хранится адрес подключения
-    private static final String CURRTABLE = "jdbc:sqlite:/src/test.sqlite";
+    private static final String CURRTABLE = "jdbc:sqlite:test.sqlite";
 
     // Объект, в котором будет храниться соединение с БД
     public static Connection connection;

@@ -6,18 +6,9 @@
 
 Компиляция и запуск приложения:
 
-Запустить терминал из корневой папки:
+Запустить скрипт runScript.sh из корневой папки
 
- - mvn clean install
-
- - mvn dependency:copy-dependencies
-
- - cd target/
-
- - java -cp CurrencyMonitor-1.0-SNAPSHOT.jar:dependency/sqlite-jdbc-3.36.0.2.jar main
  
-После запуска будет сформирована таблица БД в папке target/
-
 Для получения нужной валюты через HTTP запрос, необходимо ввести команду:
 
 curl -v -X GET localhost:8001/api/currency?JPY
