@@ -12,7 +12,7 @@
 
  - cd target/
 
- - java -cp CurrencyMonitor-1.0-SNAPSHOT.jar:dependency main
+ - java -cp CurrencyMonitor-1.0-SNAPSHOT.jar:dependency/sqlite-jdbc-3.36.0.2.jar main
  
 Для получения нужной валюты через HTTP запрос, необходимо ввести команду:
 
